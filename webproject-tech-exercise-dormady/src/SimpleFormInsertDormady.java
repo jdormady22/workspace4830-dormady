@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.ResultSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -48,17 +49,17 @@ public class SimpleFormInsertDormady extends HttpServlet {
          preparedStmt.setString(4, dueDate);
          preparedStmt.setString(5, priority);
          preparedStmt.execute();
-         connection.close();
       } catch (Exception e) {
          e.printStackTrace();
       }
 
       // Set response content type
       response.setContentType("text/html");
-      String totalDB = "SELECT * FROM myTableTechExerciseDormady";
+      String totalDB = "SELECT eventID, className, eventType, eventTitle, dueDate, priority FROM myTableTechExerciseDormady";
       try {
+    	  connection = DBConnectionDormady.connection;
 		  PreparedStatement displayStatement = connection.prepareStatement(totalDB);
-		  String output = displayStatement.toString();
+		  ResultSet DBResult = displayStatement.executeQuery();
 		  PrintWriter out = response.getWriter();
 	      String title = "Data Successfully Inserted!";
 	      String docType = "<!doctype html public \"-//w3c//dtd html 4.0 " + "transitional//en\">\n";
@@ -67,12 +68,21 @@ public class SimpleFormInsertDormady extends HttpServlet {
 	            "<head><title>" + title + "</title></head>\n" + //
 	            "<body bgcolor=\"#f0f0f0\">\n" + //
 	            "<h2 align=\"center\">" + title + "</h2>\n" + //
-	            "<ul>\n" + //
-	            output +
+	            "<h3 align=\"center\">" + "Your resulting schedule can be seen below:\n\n" + //
+	            "<table style='width:100%'>" +
+	            "<tr><th>Event ID</th><th>Class Name</th><th>Event Type</th><th>Event Title</th><th>Due Date</th><th>Priority</th></tr>" +
 	    		  "</ul>\n");
-	      
+	      while(DBResult.next()) {
+	    	  out.print("<tr><td>" + DBResult.getInt(1) + "</td>");
+	    	  out.print("<td>" + DBResult.getString(2) + "</td>");
+	    	  out.print("<td>" + DBResult.getString(3) + "</td>");
+	    	  out.print("<td>" + DBResult.getString(4) + "</td>");
+	    	  out.print("<td>" + DBResult.getString(5) + "</td>");
+	    	  out.print("<td>" + DBResult.getString(6) + "</td></tr>");
+	      }
 	      out.println("<a href=/webproject/simpleFormSearch.html>Search Data</a> <br>");
 	      out.println("</body></html>");
+	      connection.close();
 	  } catch (SQLException e) {
 		  // TODO Auto-generated catch block
 		  e.printStackTrace();
