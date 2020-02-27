@@ -70,10 +70,11 @@ public class SimpleFormInsertDormady extends HttpServlet {
 	            "<h2 align=\"center\">" + title + "</h2>\n" + //
 	            "<h3 align=\"center\">" + "Your resulting schedule can be seen below:\n\n" + //
 	            "<table style='width:100%'>" +
-	            "<tr><th>Event ID</th><th>Class Name</th><th>Event Type</th><th>Event Title</th><th>Due Date</th><th>Priority</th></tr>" +
+	            "<tr><th align='left'>Event ID</th><th align='left'>Class Name</th><th align='left'>Event Type</th><th align='left'>" + 
+	            "Event Title</th><th align='left'>Due Date</th><th align='left'>Priority</th></tr>" +
 	    		  "</ul>\n");
 	      while(DBResult.next()) {
-	    	  out.print("<tr><td>" + DBResult.getInt(1) + "</td>");
+	    	  out.print("<tr>\t<td>" + DBResult.getInt(1) + "</td>");
 	    	  out.print("<td>" + DBResult.getString(2) + "</td>");
 	    	  out.print("<td>" + DBResult.getString(3) + "</td>");
 	    	  out.print("<td>" + DBResult.getString(4) + "</td>");
