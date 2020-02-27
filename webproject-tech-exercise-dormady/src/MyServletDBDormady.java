@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/MyServletDB")
 public class MyServletDBDormady extends HttpServlet {
    private static final long serialVersionUID = 1L;
-   static String url = "jdbc:mysql://ec2-54-180-113-223.ap-northeast-2.compute.amazonaws.com:3306/myDBDormady0130";
-   static String user = "newmysqlremoteuser";
+   static String url = "jdbc:mysql://ec2-54-180-113-223.ap-northeast-2.compute.amazonaws.com:3306/myDBTechExerciseDormady";
+   static String user = "newmysqlremoteuser0722";
    static String password = "mypassword";
    static Connection connection = null;
 
@@ -48,7 +48,7 @@ public class MyServletDBDormady extends HttpServlet {
          System.out.println("Failed to make connection!");
       }
       try {
-         String selectSQL = "SELECT * FROM myTableDormady0130";// WHERE MYUSER LIKE ?";
+         String selectSQL = "SELECT * FROM myTableTechExerciseDormady";// WHERE MYUSER LIKE ?";
 //         String theUserName = "user%";
          response.getWriter().println(selectSQL + "<br>");
          response.getWriter().println("------------------------------------------<br>");
@@ -56,14 +56,18 @@ public class MyServletDBDormady extends HttpServlet {
 //         preparedStatement.setString(1, theUserName);
          ResultSet rs = preparedStatement.executeQuery();
          while (rs.next()) {
-            String id = rs.getString("ID");
-            String username = rs.getString("MYUSER");
-            String email = rs.getString("EMAIL");
-            String phone = rs.getString("PHONE");
-            response.getWriter().append("USER ID: " + id + ", ");
-            response.getWriter().append("USER NAME: " + username + ", ");
-            response.getWriter().append("USER EMAIL: " + email + ", ");
-            response.getWriter().append("USER PHONE: " + phone + "<br>");
+            String eventID = rs.getString("EventID");
+            String className = rs.getString("CLASSNAME");
+            String eventType  = rs.getString("EVENTTYPE");
+            String eventTitle  = rs.getString("EVENTTITLE");
+            String dueDate = rs.getString("DUEDATE");
+            String priority = rs.getString("PRIORITY");
+            response.getWriter().append("EVENT ID: " + eventID + ", ");
+            response.getWriter().append("CLASS NAME: " + className + ", ");
+            response.getWriter().append("EVENT TYPE: " + eventType  + ", ");
+            response.getWriter().append("EVENT TITLE: " + eventTitle  + "<br>");
+            response.getWriter().append("DUE DATE: " + dueDate + ", ");
+            response.getWriter().append("Priority: " + priority + ", ");
          }
       } catch (SQLException e) {
          e.printStackTrace();
