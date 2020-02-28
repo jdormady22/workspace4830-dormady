@@ -25,15 +25,10 @@ public class SimpleFormInsertDormady extends HttpServlet {
 
    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
       String className = request.getParameter("CLASSNAME");
-      System.out.println(className);
       String eventType = request.getParameter("EVENTTYPE");
-      System.out.println(eventType);
       String eventTitle = request.getParameter("EVENTTITLE");
-      System.out.println(eventTitle);
       String dueDate = request.getParameter("DUEDATE");
-      System.out.println(dueDate);
       String priority = request.getParameter("PRIORITY");
-      System.out.println(priority);
       
       Connection connection = null;
       String insertSql = " INSERT INTO myTableTechExerciseDormady (eventID, CLASSNAME, EVENTTYPE, EVENTTITLE, DUEDATE, PRIORITY) values (default, ?, ?, ?, ?, ?)";
@@ -57,57 +52,45 @@ public class SimpleFormInsertDormady extends HttpServlet {
       response.setContentType("text/html");
       String totalDB = "SELECT eventID, className, eventType, eventTitle, dueDate, priority FROM myTableTechExerciseDormady";
       try {
-    	  connection = DBConnectionDormady.connection;
 		  PreparedStatement displayStatement = connection.prepareStatement(totalDB);
 		  ResultSet DBResult = displayStatement.executeQuery();
 		  PrintWriter out = response.getWriter();
-	      String title = "Data Successfully Inserted!";
+		  String title = "";
+		  if (className.isEmpty() && eventType.isEmpty() && eventTitle.isEmpty() && dueDate.isEmpty() && priority.isEmpty()) {
+	    	  title = "Here is your current schedule!";
+	      }
+		  else {
+			  title = "Data Successfully Inserted!";
+		  }
 	      String docType = "<!doctype html public \"-//w3c//dtd html 4.0 " + "transitional//en\">\n";
 	      out.println(docType + //
 	            "<html>\n" + //
 	            "<head><title>" + title + "</title></head>\n" + //
 	            "<body bgcolor=\"#f0f0f0\">\n" + //
 	            "<h2 align=\"center\">" + title + "</h2>\n" + //
-	            "<h3 align=\"center\">" + "Your resulting schedule can be seen below:\n\n" + //
+	            "<h3 align=\"center\">" + "Your schedule can be seen below:\n\n" + //
 	            "<table style='width:100%'>" +
 	            "<tr><th align='left'>Event ID</th><th align='left'>Class Name</th><th align='left'>Event Type</th><th align='left'>" + 
 	            "Event Title</th><th align='left'>Due Date</th><th align='left'>Priority</th></tr>" +
 	    		  "</ul>\n");
 	      while(DBResult.next()) {
-	    	  out.print("<tr>\t<td>" + DBResult.getInt(1) + "</td>");
-	    	  out.print("<td>" + DBResult.getString(2) + "</td>");
-	    	  out.print("<td>" + DBResult.getString(3) + "</td>");
-	    	  out.print("<td>" + DBResult.getString(4) + "</td>");
-	    	  out.print("<td>" + DBResult.getString(5) + "</td>");
-	    	  out.print("<td>" + DBResult.getString(6) + "</td></tr>");
+	    	  if (!DBResult.getString(2).isEmpty() && !DBResult.getString(3).isEmpty() && !DBResult.getString(4).isEmpty() && !DBResult.getString(5).isEmpty() && !DBResult.getString(6).isEmpty()) {
+	    		  out.print("<tr>\t<td>" + DBResult.getInt(1) + "</td>");
+	    		  out.print("<td>" + DBResult.getString(2) + "</td>");
+	    		  out.print("<td>" + DBResult.getString(3) + "</td>");
+	    		  out.print("<td>" + DBResult.getString(4) + "</td>");
+	    		  out.print("<td>" + DBResult.getString(5) + "</td>");
+	    		  out.print("<td>" + DBResult.getString(6) + "</td></tr>");
+	    	  }
 	      }
-	      out.println("<a href=/webproject/simpleFormSearch.html>Search Data</a> <br>");
+	      out.println("</table>");
+	      out.println("<nav><a href=\"/webproject-tech-exercise-dormady/simpleFormInsert.html\">Insert Another Event</a></nav><br/>");
 	      out.println("</body></html>");
 	      connection.close();
 	  } catch (SQLException e) {
 		  // TODO Auto-generated catch block
 		  e.printStackTrace();
 	  }
-      /*PrintWriter out = response.getWriter();
-      String title = "Data Successfully Inserted!";
-      String docType = "<!doctype html public \"-//w3c//dtd html 4.0 " + "transitional//en\">\n";
-      out.println(docType + //
-            "<html>\n" + //
-            "<head><title>" + title + "</title></head>\n" + //
-            "<body bgcolor=\"#f0f0f0\">\n" + //
-            "<h2 align=\"center\">" + title + "</h2>\n" + //
-            "<ul>\n" + //
-            //output +
-            //"  <li><b>Class Name</b>: " + className + "\n" + //
-            //"  <li><b>Event Type</b>: " + eventType + "\n" + //
-            //"  <li><b>Event Title</b>: " + eventTitle + "\n" + //
-            //"  <li><b>Due Date</b>: " + dueDate + "\n" + //
-            //"  <li><b>Priority</b>: " + priority + "\n" + //
-
-            "</ul>\n");
-
-      out.println("<a href=/webproject/simpleFormSearch.html>Search Data</a> <br>");
-      out.println("</body></html>");*/
    }
 
    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
